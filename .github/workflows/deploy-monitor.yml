@@ -12,6 +12,7 @@ jobs:
   deploy:
     name: Deploy to Central Monitor VM
     runs-on: ubuntu-latest
+    environment: monitoring
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,7 +20,7 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.MONITOR_HOST_IP }}
+          host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
@@ -28,4 +29,4 @@ jobs:
             git pull || (git clone https://github.com/${{ github.repository }}.git /app && cd /app/infra/monitoring)
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" > .env
             docker compose pull
-            docker compose up -d
+            docker compose up -d
