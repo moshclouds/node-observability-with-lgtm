@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail-config.yaml:/etc/promtail/config.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml -config.expand-env=true
+    environment:
+      - MONITORING_VM_PRIVATE_IP=${MONITORING_VM_PRIVATE_IP} # Replace with your actual node-obs-monitor Private VPC IP
+      - ENV_NAME=${ENV_NAME} # Set to 'production' on your production VM
+    restart: unless-stopped
+
+  service-a:
+    build:
+      context: ../../services/service-a
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318 # Replace with your actual node-obs-monitor Private VPC IP
+      - OTEL_SERVICE_NAME=service-a
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+
+  service-b:
+    build:
+      context: ../../services/service-b
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318 # Replace with your actual node-obs-monitor Private VPC IP
+      - OTEL_SERVICE_NAME=service-b
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+
+  service-c:
+    build:
+      context: ../../services/service-c
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318 # Replace with your actual node-obs-monitor Private VPC IP
+      - OTEL_SERVICE_NAME=service-c
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
