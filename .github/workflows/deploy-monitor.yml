@@ -1,0 +1,31 @@
+name: Deploy Monitoring Stack
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/monitoring/**'
+      - '.github/workflows/deploy-monitor.yml'
+
+jobs:
+  deploy:
+    name: Deploy to Central Monitor VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.MONITOR_HOST_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /app/infra/monitoring
+            cd /app/infra/monitoring
+            git pull || (git clone https://github.com/${{ github.repository }}.git /app && cd /app/infra/monitoring)
+            echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" > .env
+            docker compose pull
+            docker compose up -d
