@@ -28,7 +28,10 @@ jobs:
 
             if [ ! -d "/app/.git" ]; then
               rm -rf /app
-              git clone https://github.com/${{ github.repository }}.git /app
+              git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git /app
+            else
+              cd /app
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
             fi
             cd /app/infra/monitoring
             git fetch origin
@@ -37,4 +40,5 @@ jobs:
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" > .env
             docker compose pull
             docker compose up -d
+
 
