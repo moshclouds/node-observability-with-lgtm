@@ -23,7 +23,9 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
+
             mkdir -p /app/infra/monitoring
             cd /app/infra/monitoring
             git pull || (git clone https://github.com/${{ github.repository }}.git /app && cd /app/infra/monitoring)
