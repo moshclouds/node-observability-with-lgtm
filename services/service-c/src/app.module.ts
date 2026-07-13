@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
+import { InventoryController } from './controllers/inventory.controller';
+import { InventoryService } from './services/inventory.service';
+import { InventoryRepository } from './repositories/inventory.repository';
 
 @Module({
   imports: [
@@ -12,8 +15,9 @@ import { LoggerModule } from 'nestjs-pino';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, InventoryController],
+  providers: [AppService, InventoryService, InventoryRepository],
 })
 export class AppModule {}
+
 
