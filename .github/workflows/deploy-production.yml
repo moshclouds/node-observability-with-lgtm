@@ -3,7 +3,7 @@ name: Deploy App Stack (Production)
 on:
   push:
     branches:
-      - main
+      - production
     paths:
       - 'infra/app-host/**'
       - 'services/**'
@@ -26,8 +26,8 @@ jobs:
           script: |
             mkdir -p /app/infra/app-host
             cd /app/infra/app-host
-            git checkout main
-            git pull || (git clone -b main https://github.com/${{ github.repository }}.git /app && cd /app/infra/app-host)
+            git checkout production
+            git pull || (git clone -b production https://github.com/${{ github.repository }}.git /app && cd /app/infra/app-host)
             echo "ENV_NAME=production" > .env
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" >> .env
             docker compose down
