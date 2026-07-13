@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
+import { PaymentController } from './controllers/payment.controller';
+import { PaymentService } from './services/payment.service';
+import { PaymentRepository } from './repositories/payment.repository';
 
 @Module({
   imports: [
@@ -12,8 +15,9 @@ import { LoggerModule } from 'nestjs-pino';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, PaymentController],
+  providers: [AppService, PaymentService, PaymentRepository],
 })
 export class AppModule {}
+
 
