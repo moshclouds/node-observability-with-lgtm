@@ -12,20 +12,10 @@ distributor:
         http:
           endpoint: 0.0.0.0:4318
 
-ingester:
-  max_block_duration: 5m
-
-compactor:
-  compaction:
-    block_size_bytes: 4194304 # 4MB
-    compacted_block_retention: 48h
-
 storage:
   trace:
     backend: local
-    block:
-      bloom_filter_false_positive: 0.05
-    wal:
-      path: /var/tempo/wal
     local:
       path: /var/tempo/blocks
+    wal:
+      path: /var/tempo/wal
