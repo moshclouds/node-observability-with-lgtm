@@ -22,7 +22,7 @@ export class OrderService {
 
     try {
       // 2. Call Service B to process payment
-      const paymentUrl = `${process.env.PAYMENT_SERVICE_URL || 'http://service-b:3000'}/payments`;
+      const paymentUrl = `${process.env.PAYMENT_SERVICE_URL || 'http://payment-service:3000'}/payments`;
       this.logger.log(`Initiating payment validation for Order ID: ${order.id}. URL: ${paymentUrl}`);
       
       const paymentResponse = await fetch(paymentUrl, {
@@ -42,8 +42,9 @@ export class OrderService {
       this.logger.log(`Payment successfully authorized for Order ID: ${order.id}. Transaction ID: ${paymentData.id}`);
 
       // 3. Call Service C to reserve inventory
-      const inventoryUrl = `${process.env.INVENTORY_SERVICE_URL || 'http://service-c:3000'}/inventory/reserve`;
+      const inventoryUrl = `${process.env.INVENTORY_SERVICE_URL || 'http://inventory-service:3000'}/inventory/reserve`;
       this.logger.log(`Initiating stock reservation for Item ID: ${order.itemId}, Quantity: ${order.quantity}. URL: ${inventoryUrl}`);
+
 
       const inventoryResponse = await fetch(inventoryUrl, {
         method: 'POST',
