@@ -8,7 +8,7 @@ A 100% open-source, self-hosted centralized logging, tracing, and monitoring pla
 
 ```mermaid
 flowchart TD
-    subgraph App Host VMs (Staging / Production)
+    subgraph "App Host VMs (Staging / Production)"
         order_s["📦 order-service (Port 3001)"]
         payment_s["📦 payment-service (Port 3002)"]
         inventory_s["📦 inventory-service (Port 3003)"]
@@ -18,7 +18,7 @@ flowchart TD
         docker_logs["/var/lib/docker/containers"]
     end
 
-    subgraph Monitor VM (Central Observability VM)
+    subgraph "Monitor VM (Central Observability VM)"
         grafana["📊 Grafana (Port 3000 - Public)"]
         loki["🗄️ Grafana Loki (Port 3100 - Private VPC Only)"]
         tempo["⚡ Grafana Tempo (Port 3200/4317/4318 - Private VPC Only)"]
