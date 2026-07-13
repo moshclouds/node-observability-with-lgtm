@@ -21,6 +21,7 @@ services:
       - NODE_ENV=production
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318
       - OTEL_SERVICE_NAME=order-service
+      - OTEL_RESOURCE_ATTRIBUTES=deployment.environment=${ENV_NAME}
     restart: unless-stopped
     ports:
       - "3001:3000"
@@ -33,6 +34,7 @@ services:
       - NODE_ENV=production
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318
       - OTEL_SERVICE_NAME=payment-service
+      - OTEL_RESOURCE_ATTRIBUTES=deployment.environment=${ENV_NAME}
     restart: unless-stopped
     ports:
       - "3002:3000"
@@ -45,6 +47,8 @@ services:
       - NODE_ENV=production
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://${MONITORING_VM_PRIVATE_IP}:4318
       - OTEL_SERVICE_NAME=inventory-service
+      - OTEL_RESOURCE_ATTRIBUTES=deployment.environment=${ENV_NAME}
     restart: unless-stopped
     ports:
-      - "3003:3000"
+      - "3003:3000"
+
