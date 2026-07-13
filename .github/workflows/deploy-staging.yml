@@ -27,12 +27,21 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
 
-            mkdir -p /app/infra/app-host
+            if [ ! -d "/app/.git" ]; then
+              rm -rf /app
+              git clone -b staging https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git /app
+            else
+              cd /app
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+            fi
             cd /app/infra/app-host
+            git fetch origin
             git checkout staging
-            git pull || (git clone -b staging https://github.com/${{ github.repository }}.git /app && cd /app/infra/app-host)
+            git pull origin staging
             echo "ENV_NAME=staging" > .env
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" >> .env
             docker compose down
             docker compose up -d --build
+
+
 
