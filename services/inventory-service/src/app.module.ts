@@ -12,6 +12,9 @@ import { InventoryRepository } from './repositories/inventory.repository';
       pinoHttp: {
         // Generates clean JSON logs in production
         level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+        formatters: {
+          level: (label) => ({ level: label }),
+        },
       },
     }),
   ],
@@ -19,5 +22,7 @@ import { InventoryRepository } from './repositories/inventory.repository';
   providers: [AppService, InventoryService, InventoryRepository],
 })
 export class AppModule {}
+
+
 
 

@@ -12,6 +12,9 @@ import { OrderRepository } from './repositories/order.repository';
       pinoHttp: {
         // Generates clean JSON logs in production
         level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+        formatters: {
+          level: (label) => ({ level: label }),
+        },
       },
     }),
   ],
@@ -19,4 +22,3 @@ import { OrderRepository } from './repositories/order.repository';
   providers: [AppService, OrderService, OrderRepository],
 })
 export class AppModule {}
-
