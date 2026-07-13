@@ -27,12 +27,17 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
 
-            mkdir -p /app/infra/app-host
+            if [ ! -d "/app/.git" ]; then
+              rm -rf /app
+              git clone -b production https://github.com/${{ github.repository }}.git /app
+            fi
             cd /app/infra/app-host
+            git fetch origin
             git checkout production
-            git pull || (git clone -b production https://github.com/${{ github.repository }}.git /app && cd /app/infra/app-host)
+            git pull origin production
             echo "ENV_NAME=production" > .env
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" >> .env
             docker compose down
             docker compose up -d --build
+
 
