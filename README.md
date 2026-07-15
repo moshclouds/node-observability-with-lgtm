@@ -36,6 +36,8 @@ The project is split across **two types of VMs** on DigitalOcean:
 
 All inter-VM communication uses DigitalOcean's **Private VPC network**, keeping telemetry endpoints off the public internet.
 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/1288b409-bbaf-4f37-a1b7-d2fa34ae9298" />
+
 ```mermaid
 flowchart TD
     subgraph "App Host VMs (Staging / Production)"
