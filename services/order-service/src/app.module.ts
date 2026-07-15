@@ -5,6 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { OrderController } from './controllers/order.controller';
 import { OrderService } from './services/order.service';
 import { OrderRepository } from './repositories/order.repository';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OrderRepository } from './repositories/order.repository';
         },
       },
     }),
+    PrometheusModule.register(),
   ],
   controllers: [AppController, OrderController],
   providers: [AppService, OrderService, OrderRepository],

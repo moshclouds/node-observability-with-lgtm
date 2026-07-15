@@ -38,7 +38,37 @@ jobs:
             git checkout main
             git pull origin main
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" > .env
+
+            # Generate Prometheus target files directly on the VM (secrets interpolated by GitHub Actions before sending)
+            mkdir -p targets
+
+            cat > targets/node-exporter-targets.json << 'TARGETS_EOF'
+            [
+              { "targets": ["${{ secrets.STAGING_PRIVATE_IP }}:9100"], "labels": { "env": "staging" } },
+              { "targets": ["${{ secrets.PROD_PRIVATE_IP }}:9100"],    "labels": { "env": "production" } }
+            ]
+            TARGETS_EOF
+
+            cat > targets/nestjs-targets.json << 'TARGETS_EOF'
+            [
+              {
+                "targets": [
+                  "${{ secrets.STAGING_PRIVATE_IP }}:3001",
+                  "${{ secrets.STAGING_PRIVATE_IP }}:3002",
+                  "${{ secrets.STAGING_PRIVATE_IP }}:3003"
+                ],
+                "labels": { "env": "staging" }
+              },
+              {
+                "targets": [
+                  "${{ secrets.PROD_PRIVATE_IP }}:3001",
+                  "${{ secrets.PROD_PRIVATE_IP }}:3002",
+                  "${{ secrets.PROD_PRIVATE_IP }}:3003"
+                ],
+                "labels": { "env": "production" }
+              }
+            ]
+            TARGETS_EOF
+
             docker compose pull
             docker compose up -d
-
-

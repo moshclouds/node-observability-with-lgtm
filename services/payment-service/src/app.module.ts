@@ -5,6 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { PaymentController } from './controllers/payment.controller';
 import { PaymentService } from './services/payment.service';
 import { PaymentRepository } from './repositories/payment.repository';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -17,10 +18,9 @@ import { PaymentRepository } from './repositories/payment.repository';
         },
       },
     }),
+    PrometheusModule.register(),
   ],
   controllers: [AppController, PaymentController],
   providers: [AppService, PaymentService, PaymentRepository],
 })
 export class AppModule {}
-
-
