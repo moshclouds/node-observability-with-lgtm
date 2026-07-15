@@ -17,6 +17,38 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Generate Prometheus Targets
+        run: |
+          mkdir -p infra/monitoring/targets
+
+          cat > infra/monitoring/targets/node-exporter-targets.json << EOF
+          [
+            { "targets": ["${{ secrets.STAGING_PRIVATE_IP }}:9100"], "labels": { "env": "staging" } },
+            { "targets": ["${{ secrets.PROD_PRIVATE_IP }}:9100"],    "labels": { "env": "production" } }
+          ]
+          EOF
+
+          cat > infra/monitoring/targets/nestjs-targets.json << EOF
+          [
+            {
+              "targets": [
+                "${{ secrets.STAGING_PRIVATE_IP }}:3001",
+                "${{ secrets.STAGING_PRIVATE_IP }}:3002",
+                "${{ secrets.STAGING_PRIVATE_IP }}:3003"
+              ],
+              "labels": { "env": "staging" }
+            },
+            {
+              "targets": [
+                "${{ secrets.PROD_PRIVATE_IP }}:3001",
+                "${{ secrets.PROD_PRIVATE_IP }}:3002",
+                "${{ secrets.PROD_PRIVATE_IP }}:3003"
+              ],
+              "labels": { "env": "production" }
+            }
+          ]
+          EOF
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -40,5 +72,17 @@ jobs:
             echo "MONITORING_VM_PRIVATE_IP=${{ secrets.MONITORING_VM_PRIVATE_IP }}" > .env
             docker compose pull
             docker compose up -d
+
+      - name: Copy Prometheus Targets to Monitor VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          source: "infra/monitoring/targets/"
+          target: "/app/"
+          strip_components: 0
+
 
 
