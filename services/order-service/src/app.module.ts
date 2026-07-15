@@ -14,6 +14,9 @@ import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-promet
       pinoHttp: {
         // Generates clean JSON logs in production
         level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
+        formatters: {
+          level: (label) => ({ level: label }),
+        },
       },
     }),
     PrometheusModule.register(),
@@ -30,5 +33,3 @@ import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-promet
   ],
 })
 export class AppModule {}
-
-
