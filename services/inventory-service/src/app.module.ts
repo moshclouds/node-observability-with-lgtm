@@ -5,8 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { InventoryController } from './controllers/inventory.controller';
 import { InventoryService } from './services/inventory.service';
 import { InventoryRepository } from './repositories/inventory.repository';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-prometheus';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -22,14 +21,6 @@ import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-promet
     PrometheusModule.register(),
   ],
   controllers: [AppController, InventoryController],
-  providers: [
-    AppService,
-    InventoryService,
-    InventoryRepository,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: PrometheusInterceptor,
-    },
-  ],
+  providers: [AppService, InventoryService, InventoryRepository],
 })
 export class AppModule {}
