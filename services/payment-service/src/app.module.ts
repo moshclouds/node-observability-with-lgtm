@@ -5,8 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { PaymentController } from './controllers/payment.controller';
 import { PaymentService } from './services/payment.service';
 import { PaymentRepository } from './repositories/payment.repository';
-import { APP_INTERCEPTOR } from '@nestjs/core';
-import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-prometheus';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 
 @Module({
   imports: [
@@ -22,17 +21,6 @@ import { PrometheusModule, PrometheusInterceptor } from '@willsoto/nestjs-promet
     PrometheusModule.register(),
   ],
   controllers: [AppController, PaymentController],
-  providers: [
-    AppService,
-    PaymentService,
-    PaymentRepository,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: PrometheusInterceptor,
-    },
-  ],
+  providers: [AppService, PaymentService, PaymentRepository],
 })
 export class AppModule {}
-
-
-
