@@ -1,4 +1,4 @@
-﻿# Self-Hosted LGTM + Prometheus Observability Stack for NestJS Microservices
+# Self-Hosted LGTM + Prometheus Observability Stack for NestJS Microservices
 
 A 100% open-source, self-hosted centralized observability platform designed for high security and performance on **DigitalOcean droplets**. This stack provides **logs, traces, and metrics** across multiple independent NestJS microservices, with automated CI/CD deployments via GitHub Actions.
 
@@ -70,7 +70,7 @@ flowchart TD
     %% Log shipping
     docker_sock -->|Auto-discover containers| promtail
     docker_logs -->|Read container logs| promtail
-    promtail -->|Ship logs via HTTP (X-Scope-OrgID)| loki
+    promtail -->|"Ship logs via HTTP (X-Scope-OrgID)"| loki
 
     %% Data visualization
     grafana -->|Query logs| loki
